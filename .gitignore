@@ -1,2 +1,16 @@
-"project/myenv/" 
-"project/myenv/" 
+# Ignore Python virtual environments
+venv/
+.env/
+*.env
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore node_modules
+Frontend/node_modules/
+frontend/node_modules/
+node_modules/
+myenv/
