@@ -55,7 +55,7 @@ MIDDLEWARE = [
 
 # Allow frontend to access Django backend
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React dev server
+    "https://seproject-production.up.railway.app",  # React dev server
 ]
 
 ROOT_URLCONF = 'project.urls'
