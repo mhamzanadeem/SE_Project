@@ -11,10 +11,12 @@
     <title>Home Page</title>
 </head>
 <body>
-    <div id="root"></div> <!-- React app will mount here -->
-
-    <!-- Include the React build JS -->
-    <script src="{% static 'index.js' %}"></script>
-
+    <h1>Hello World</h1>
+    
+    <script>
+        document.body.onload = () => {
+            onLoad()
+        }
+    </script>
 </body>
 </html>
