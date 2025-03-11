@@ -12,7 +12,8 @@ SE_Project is a full-stack web application consisting of a **React** frontend an
 cd Frontend
 npm install 
 npm install @mui/material @emotion/react @emotion/styled
-npm install @mui/icons-material 
+npm install @mui/icons-material
+npm install react-router-dom
 ```
 
 ### Run the Frontend
