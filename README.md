@@ -1,42 +1,44 @@
 # SE_Project
 
-## 📌 Project Overview
-This project consists of a **React.js frontend** and a **Django backend**, designed to work seamlessly together. Follow the setup instructions below to install dependencies and run the project.
+## Overview
+SE_Project is a full-stack web application consisting of a **React** frontend and a **Django** backend. Follow the instructions below to set up and run the project on your local machine.
 
 ---
 
-## 🚀 Frontend Setup (React.js)
+## Frontend Setup (React)
 
-### 📥 Install Dependencies (Run Once)
+### Install Dependencies (One-time Setup)
 ```sh
 cd Frontend
 npm install 
 npm install @mui/material @emotion/react @emotion/styled
-npm install @mui/icons-material
+npm install @mui/icons-material 
 ```
 
-### ▶️ Run the Frontend
+### Run the Frontend
 ```sh
 npm start
 ```
 
+For additional Material-UI components, visit the official documentation: [Material-UI Components](https://mui.com/material-ui/all-components/)
+
 ---
 
-## 🛠 Backend Setup (Django)
+## Backend Setup (Django)
 
-### 📥 Install Dependencies (Run Once)
+### Install Dependencies (One-time Setup)
 ```sh
 python -m venv myenv
 myenv\Scripts\activate
 pip install django
 cd project
 pip install djangorestframework
-dpip install django-cors-headers
+pip install django-cors-headers
 python -m pip install Pillow
 python manage.py migrate
 ```
 
-### ▶️ Run the Backend
+### Run the Backend
 ```sh
 myenv\Scripts\activate
 python manage.py runserver
@@ -44,33 +46,20 @@ python manage.py runserver
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 ```
 SE_Project/
-│-- Frontend/  # React.js frontend
-│-- project/   # Django backend
-│-- myenv/     # Python virtual environment
-│-- README.md  # Documentation
+│── Frontend/   # React frontend
+│── project/    # Django backend
+│── README.md   # Project documentation
 ```
 
 ---
 
-## 🌟 Features
-- **Frontend**: Built with React.js and Material-UI
-- **Backend**: Django REST Framework with CORS support
-- **Image Handling**: Pillow library integrated
-- **Cross-Origin Requests**: Handled using `django-cors-headers`
+## Contributions
+Feel free to fork this repository and submit pull requests. Suggestions and improvements are always welcome!
 
 ---
 
-## 📌 Notes
-- Ensure that you activate the virtual environment before running backend commands.
-- The frontend should be run separately from the backend.
-- If any dependencies are missing, install them as needed.
-
----
-
-## 📧 Contact
-For any issues or contributions, feel free to submit a pull request or open an issue in the repository.
-
-Happy coding! 🚀
+## License
+This project is open-source and available under the [MIT License](LICENSE).
