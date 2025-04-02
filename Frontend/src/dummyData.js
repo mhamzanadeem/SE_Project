@@ -51,7 +51,7 @@ export const homeData = [
     video: "../video/video4.mp4",
     date: "12-Aug-2015",
   },
-]
+];
 export const upcome = [
   {
     id: 1,
@@ -83,7 +83,7 @@ export const upcome = [
     name: "Jumbo Queen",
     time: "2hr : 38mins",
   },
-]
+];
 export const latest = [
   {
     id: 1,
@@ -115,7 +115,7 @@ export const latest = [
     name: "Latest Three",
     time: "2hr : 38mins",
   },
-]
+];
 
 export const trending = [
   {
@@ -154,7 +154,7 @@ export const trending = [
     cover: "../images/img/slide3.jpg",
     date: "20-FEB-2010",
   },
-]
+];
 export const recommended = [
   {
     id: 4,
@@ -186,4 +186,4 @@ export const recommended = [
     name: "Another Danger",
     time: "2hr : 38mins",
   },
-]
+];

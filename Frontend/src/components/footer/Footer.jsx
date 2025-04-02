@@ -1,42 +1,98 @@
-import React from "react"
-import { homeData } from "../../dummyData"
-import "./footer.css"
+import React from "react";
+import {
+  Container,
+  Grid,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  Box,
+} from "@mui/material";
+import { Facebook, Twitter, GitHub, Instagram } from "@mui/icons-material";
 
 const Footer = () => {
   return (
-    <>
-      <footer>
-        <div className='container'>
-          <div className='box'>
-            <ul className='flex'>
-              <li>Terms of Use</li>
-              <li>Privacy-Policy</li>
-              <li>Blog</li>
-              <li>FAQ</li>
-              <li>Watch List</li>
-            </ul>
-            <p>© 2022 STREAMIT. All Rights Reserved. All videos and shows on this platform are trademarks of, and all related images and content are the property of, Streamit Inc. Duplication and copy of this is strictly prohibited. All rights reserved.</p>
-          </div>
-          <div className='box'>
-            <h3>Follow Us</h3>
-            <i className='fab fa-facebook-f'></i>
-            <i className='fab fa-twitter'></i>
-            <i className='fab fa-github'></i>
-            <i className='fab fa-instagram'></i>
-          </div>
-          <div className='box'>
-            <h3>Streamit App</h3>
-            <div className='img flexSB'>
-              <img src='https://img.icons8.com/color/48/000000/apple-app-store--v3.png' />
-              <span>App Store</span>
-              <img src='https://img.icons8.com/fluency/48/000000/google-play.png' />
-              <span>Google Play Store</span>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </>
-  )
-}
+    <Box
+      component="footer"
+      sx={{
+        bgcolor: "#191919",
+        color: "white",
+        mt: 10,
+        py: 5,
+        borderTop: "1px solid rgba(255,255,255,0.1)",
+      }}
+    >
+      <Container>
+        <Grid
+          container
+          spacing={4}
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Grid item xs={12} md={6}>
+            <List sx={{ display: "flex", flexWrap: "wrap", p: 0, m: 0 }}>
+              {[
+                "Terms of Use",
+                "Privacy Policy",
+                "Blog",
+                "FAQ",
+                "Watch List",
+              ].map((text) => (
+                <ListItem
+                  key={text}
+                  sx={{
+                    width: "auto",
+                    px: 2,
+                    py: 0,
+                    transition: "all 0.3s ease",
+                    cursor: "pointer",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                      "& .MuiListItemText-primary": {
+                        color: "primary.main",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary={text}
+                    primaryTypographyProps={{
+                      color: "white",
+                      variant: "body2",
+                      sx: { fontWeight: 500, transition: "color 0.3s ease" },
+                    }}
+                  />
+                </ListItem>
+              ))}
+            </List>
+            <Typography variant="body2" sx={{ mt: 3, opacity: 0.7 }}>
+              © 2022 STREAMIT. All Rights Reserved.
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              Follow Us
+            </Typography>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              {[Facebook, Twitter, GitHub, Instagram].map((Icon, index) => (
+                <IconButton
+                  key={index}
+                  sx={{
+                    color: "white",
+                    transition: "transform 0.3s",
+                    "&:hover": { transform: "scale(1.2)" },
+                  }}
+                >
+                  <Icon fontSize="large" />
+                </IconButton>
+              ))}
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  );
+};
 
-export default Footer
+export default Footer;

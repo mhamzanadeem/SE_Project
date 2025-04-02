@@ -1,53 +1,130 @@
-import React, { useState, useEffect } from "react"
-import "./style.css"
-import { useParams } from "react-router-dom"
-import { homeData, recommended } from "../../dummyData"
-import Upcomming from "../upcoming/Upcomming"
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { Box, Container, Typography, Divider, IconButton } from "@mui/material";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { homeData, recommended } from "../../dummyData";
+import Upcomming from "../upcoming/Upcomming";
 
 const SinglePage = () => {
-  const { id } = useParams()
-  const [item, setItem] = useState(null)
+  const { id } = useParams();
+  const [item, setItem] = useState(null);
 
   useEffect(() => {
-    let item = homeData.find((item) => item.id === parseInt(id))
-    if (item) {
-      setItem(item)
+    const foundItem = homeData.find((i) => i.id === parseInt(id));
+    if (foundItem) {
+      setItem(foundItem);
     }
-  }, [id])
-  const [rec, setRec] = useState(recommended)
+  }, [id]);
+
+  const [rec] = useState(recommended);
 
   return (
     <>
       {item ? (
         <>
-          <section className='singlePage'>
-            <div className='singleHeading'>
-              <h1>{item.name} </h1> <span> | {item.time} | </span> <span> HD </span>
-            </div>
-            <div className='container'>
-              <video src={item.video} controls></video>
-              <div className='para'>
-                <h3>Date : {item.date}</h3>
-                <p>{item.desc}</p>
-                <p>Get access to the direct Project Overview with this report. Just by a quick glance, you’ll have an idea of the total tasks allotted to the team, number of milestones given & completed, total Links created for the project and the total time taken by all the users. Each section would elaborate the data further, if chosen.</p>
-                <p>Get access to the direct Project Overview with this report. Just by a quick glance, you’ll have an idea of the total tasks allotted to the team, number of milestones given & completed, total Links created for the project and the total time taken by all the users. Each section would elaborate the data further, if chosen.</p>
-                <p>Get access to the direct Project Overview with this report. Just by a quick glance, you’ll have an idea of the total tasks allotted to the team, number of milestones given & completed, total Links created for the project and the total time taken by all the users. Each section would elaborate the data further, if chosen.</p>
-              </div>
-              <div className='soical'>
-                <h3>Share : </h3>
-                <img src='https://img.icons8.com/color/48/000000/facebook-new.png' />
-                <img src='https://img.icons8.com/fluency/48/000000/twitter-circled.png' />
-                <img src='https://img.icons8.com/fluency/48/000000/linkedin-circled.png' />
-              </div>
-            </div>
-          </section>
-          <Upcomming items={rec} title='Recommended Movies' />
+          {/* Header Section */}
+          <Box
+            sx={{
+              backgroundColor: "#1e272d",
+              py: 2,
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                textTransform: "uppercase",
+                fontWeight: "bold",
+                color: "#fff",
+              }}
+            >
+              {item.name}
+            </Typography>
+            <Typography variant="h6" sx={{ color: "#fff" }}>
+              | {item.time} | HD
+            </Typography>
+          </Box>
+
+          {/* Main Content Section */}
+          <Container maxWidth="md" sx={{ my: 4 }}>
+            {/* Video */}
+            <Box sx={{ my: 4 }}>
+              <video
+                src={item.video}
+                controls
+                style={{ width: "100%", borderRadius: 8 }}
+              />
+            </Box>
+
+            {/* Description */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" color="text.secondary">
+                Date: {item.date}
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2, lineHeight: 1.6 }}>
+                {item.desc}
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2, lineHeight: 1.6 }}>
+                Get access to the direct Project Overview with this report. Just
+                by a quick glance, you’ll have an idea of the total tasks
+                allotted to the team, number of milestones given &amp;
+                completed, total Links created for the project and the total
+                time taken by all the users. Each section would elaborate the
+                data further, if chosen.
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2, lineHeight: 1.6 }}>
+                Get access to the direct Project Overview with this report. Just
+                by a quick glance, you’ll have an idea of the total tasks
+                allotted to the team, number of milestones given &amp;
+                completed, total Links created for the project and the total
+                time taken by all the users. Each section would elaborate the
+                data further, if chosen.
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2, lineHeight: 1.6 }}>
+                Get access to the direct Project Overview with this report. Just
+                by a quick glance, you’ll have an idea of the total tasks
+                allotted to the team, number of milestones given &amp;
+                completed, total Links created for the project and the total
+                time taken by all the users. Each section would elaborate the
+                data further, if chosen.
+              </Typography>
+            </Box>
+
+            {/* Social Share */}
+            <Box sx={{ display: "flex", alignItems: "center", mt: 3 }}>
+              <Typography variant="h6" sx={{ mr: 1 }}>
+                Share:
+              </Typography>
+              <IconButton color="primary">
+                <FacebookIcon />
+              </IconButton>
+              <IconButton color="primary">
+                <TwitterIcon />
+              </IconButton>
+              <IconButton color="primary">
+                <LinkedInIcon />
+              </IconButton>
+            </Box>
+
+            <Divider sx={{ mt: 4, mb: 2 }} />
+          </Container>
+
+          {/* Recommended Movies Section */}
+          <Upcomming items={rec} title="Recommended Movies" />
         </>
       ) : (
-        "no"
+        <Typography variant="h5" color="error" align="center">
+          Item not found.
+        </Typography>
       )}
     </>
-  )
-}
+  );
+};
 
-export default SinglePage
+export default SinglePage;

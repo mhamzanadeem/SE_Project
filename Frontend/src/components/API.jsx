@@ -19,34 +19,27 @@
 //     console.error('Error fetching data:', error);
 //   });
 
-
 // api_key='bad64aad7360bfd1615d7eea5599e286';
-  // for (let page = 1; page <= 10; page++) {
-  //   const apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=28&page=${page}`;
-  
-  //   fetch(apiUrl)
-  //     .then(response => {
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-  //       return response.json();
-  //     })
-  //     .then(data => {
-  //       console.log(`Page ${page} Results:`, data.results);
-  //       // Process the data as needed
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching data:', error);
-  //     });
-  // }
+// for (let page = 1; page <= 10; page++) {
+//   const apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=28&page=${page}`;
 
-
-
-
+//   fetch(apiUrl)
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       console.log(`Page ${page} Results:`, data.results);
+//       // Process the data as needed
+//     })
+//     .catch(error => {
+//       console.error('Error fetching data:', error);
+//     });
+// }
 
 ///////////// Youtube API //////////////
-
-
 
 //const apiKey = 'AIzaSyC8nS5070mWv1x-VoXw2Z7WAs54mzbuylQ';
 // const movieTitle = 'Inception';
@@ -73,22 +66,33 @@
 //     console.error('Error fetching data:', error);
 //   });
 
-import React, { useState, useEffect } from 'react';
-import { List, ListItem, ListItemAvatar, ListItemText, Avatar, CircularProgress, Typography, Container } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import {
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  CircularProgress,
+  Box,
+  CardActionArea,
+} from "@mui/material";
 
 const MovieList = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const api_key='bad64aad7360bfd1615d7eea5599e286';
+  const api_key = "bad64aad7360bfd1615d7eea5599e286";
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         let allMovies = [];
         for (let page = 1; page <= 10; page++) {
-          const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=28&page=${page}`);
+          const response = await fetch(
+            `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=28&page=${page}`
+          );
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
@@ -102,27 +106,70 @@ const MovieList = () => {
         setLoading(false);
       }
     };
-    
+
     fetchMovies();
   }, []);
 
-  if (loading) return <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 4 }} />;
-  if (error) return <Typography color="error">Error: {error}</Typography>;
+  if (loading)
+    return (
+      <CircularProgress sx={{ display: "block", margin: "auto", mt: 4 }} />
+    );
+  if (error)
+    return (
+      <Typography color="error" align="center">{`Error: ${error}`}</Typography>
+    );
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>Action Movies</Typography>
-      <List dense>
+    <Box sx={{ mt: 4, px: 2 }}>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{ fontWeight: "bold", color: "#2c5364" }}
+      >
+        Action Movies
+      </Typography>
+      <Grid container spacing={4}>
         {movies.map((movie) => (
-          <ListItem key={movie.id}>
-            <ListItemAvatar>
-              <Avatar src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
-            </ListItemAvatar>
-            <ListItemText primary={movie.title} secondary={`Rating: ${movie.vote_average}`} />
-          </ListItem>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
+            <Card
+              sx={{
+                maxWidth: 345,
+                boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                borderRadius: 2,
+                overflow: "hidden",
+                transition: "transform 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
+            >
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="250"
+                  image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                  sx={{ borderRadius: 2 }}
+                />
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    {movie.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Rating: {movie.vote_average}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
         ))}
-      </List>
-    </Container>
+      </Grid>
+    </Box>
   );
 };
 

@@ -1,19 +1,16 @@
-import React, { useState } from "react"
-import "./home.css"
-import { homeData } from "../../dummyData"
-import Home from "./Home"
+import React, { useState } from "react";
+import { Box } from "@mui/material";
+import { homeData } from "../../dummyData";
+import Home from "./Home";
 
 const Homes = () => {
-  const [items, setItems] = useState(homeData)
+  const [items] = useState(homeData);
 
   return (
-    <>
-      <section className='home'>
-        <Home items={items} />
-      </section>
-      <div className='mragin'></div>
-    </>
-  )
-}
+    <Box sx={{ width: "100%", bgcolor: "black" }}>
+      <Home items={items} />
+    </Box>
+  );
+};
 
-export default Homes
+export default Homes;

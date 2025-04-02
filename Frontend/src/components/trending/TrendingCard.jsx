@@ -8,9 +8,12 @@ import {
   Button,
   Stack,
 } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
-const Ucard = ({ item: { id, cover, name, time } }) => {
+const TrendingCard = ({ item }) => {
+  const { id, cover, name, rating, time, genres } = item;
+
   return (
     <Card
       sx={{
@@ -18,16 +21,22 @@ const Ucard = ({ item: { id, cover, name, time } }) => {
         boxShadow: 3,
         transition: "0.3s",
         "&:hover": { transform: "scale(1.05)" },
-        width: 280, // Ensure consistent width
       }}
     >
-      <CardMedia component="img" height="250" image={cover} alt={name} />
+      <CardMedia component="img" height="350" image={cover} alt={name} />
       <CardContent>
         <Typography variant="h6" fontWeight="bold">
           {name}
         </Typography>
-        <Typography variant="body2" color="gray" mt={1}>
-          {time}
+        <Stack direction="row" alignItems="center" spacing={1} mt={1}>
+          <StarIcon sx={{ color: "#f5c518" }} />
+          <Typography variant="body2">{rating} IMDb</Typography>
+          <Typography variant="body2" color="gray">
+            • {time}
+          </Typography>
+        </Stack>
+        <Typography variant="body2" color="text.secondary" mt={1}>
+          {Array.isArray(genres) ? genres.join(", ") : "Unknown Genre"}
         </Typography>
         <Button
           component={Link}
@@ -45,4 +54,4 @@ const Ucard = ({ item: { id, cover, name, time } }) => {
   );
 };
 
-export default Ucard;
+export default TrendingCard;
