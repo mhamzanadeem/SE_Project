@@ -6,7 +6,9 @@ import {
   Popper,
   Box,
   Typography,
+  InputAdornment,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 const SearchAutocomplete = ({ onSearchSelect }) => {
   const [inputValue, setInputValue] = useState("");
@@ -123,22 +125,21 @@ const SearchAutocomplete = ({ onSearchSelect }) => {
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="Search Movies..."
+          fullWidth
+          placeholder="Search for movies by title"
           variant="outlined"
-          size="small"
-          sx={{
-            backgroundColor: "#fff",
-            width: "250px",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "4px",
-            },
-          }}
           InputProps={{
             ...params.InputProps,
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: "#757575" }} />
+              </InputAdornment>
+            ),
             sx: {
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "4px",
-              },
+              bgcolor: "#212121",
+              borderRadius: "4px",
+              "& fieldset": { border: "none" },
+              color: "#fff", // Ensure text is visible on dark background
             },
             endAdornment: (
               <>
@@ -151,7 +152,7 @@ const SearchAutocomplete = ({ onSearchSelect }) => {
           }}
         />
       )}
-      sx={{ width: "250px" }}
+      sx={{ width: "100%" }}
     />
   );
 };

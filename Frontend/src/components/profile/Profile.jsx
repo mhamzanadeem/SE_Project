@@ -64,7 +64,7 @@ const Profile = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => history.push("/")} // Changed from navigate to history.push
+        onClick={() => history.push("/")} 
         sx={{ mt: 2 }}
       >
         Back to Home
