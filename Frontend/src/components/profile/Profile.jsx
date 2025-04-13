@@ -1,3 +1,5 @@
+// components/profile/Profilel.jsx
+
 import { useUser, RedirectToSignIn } from "@clerk/clerk-react";
 import { Typography, Box, CircularProgress, Button } from "@mui/material";
 import { useHistory } from "react-router-dom"; // Changed from useNavigate to useHistory
@@ -64,7 +66,7 @@ const Profile = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => history.push("/")} 
+        onClick={() => history.push("/")} // Changed from navigate to history.push
         sx={{ mt: 2 }}
       >
         Back to Home
