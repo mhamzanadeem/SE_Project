@@ -1,4 +1,6 @@
 import React from "react";
+import TestAuth from './components/TestAuth';
+
 import { CssBaseline } from "@mui/material";
 import {
   BrowserRouter as Router,
@@ -28,6 +30,7 @@ const Layout = ({ children }) => {
   );
 };
 
+
 function App() {
   return (
     <Router>
@@ -40,6 +43,7 @@ function App() {
           <Route path="/auth/" component={AuthPage} />
           <Route path="/search" component={SearchResultsPage} />
           <Route path="/profile" component={Profile} />
+          <Route path="/test-auth" component={TestAuth} />
         </Switch>
       </Layout>
     </Router>
