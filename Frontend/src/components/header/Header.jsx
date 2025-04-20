@@ -1,348 +1,305 @@
-import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { UserButton, SignedIn, SignedOut } from "@clerk/clerk-react";
+// src/components/header/Header.jsx
+
+import React, { useState, useContext } from "react";
+
+// Added CircularProgress to the imports
+
 import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Button,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
   Box,
-  TextField,
   Typography,
+  Button,
+  Divider,
+  IconButton,
+  Tooltip,
   CircularProgress,
-  Autocomplete,
 } from "@mui/material";
-import { Menu as MenuIcon, Search, Notifications } from "@mui/icons-material";
 
-// Custom Search Autocomplete Component
-const SearchAutocomplete = ({ onSearchSelect }) => {
-  const [inputValue, setInputValue] = useState("");
-  const [options, setOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const api_key = "bad64aad7360bfd1615d7eea5599e286";
+import { styled, useTheme } from "@mui/material/styles";
 
-  useEffect(() => {
-    if (inputValue.trim().length === 0) {
-      setOptions([]);
-      return;
-    }
-    setLoading(true);
-    const controller = new AbortController();
-    const debounce = setTimeout(() => {
-      fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${encodeURIComponent(
-          inputValue
-        )}`,
-        { signal: controller.signal }
-      )
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          // Only include movies with a poster and release date
-          const filtered = data.results.filter(
-            (movie) => movie.poster_path && movie.release_date
-          );
-          // Limit to top 5 suggestions
-          setOptions(filtered.slice(0, 5));
-        })
-        .catch((err) => {
-          if (err.name !== "AbortError") console.error(err);
-        })
-        .finally(() => setLoading(false));
-    }, 500);
+import HomeIcon from "@mui/icons-material/Home";
 
-    return () => {
-      clearTimeout(debounce);
-      controller.abort();
-    };
-  }, [inputValue, api_key]);
+import HistoryIcon from "@mui/icons-material/History";
 
-  return (
-    <Autocomplete
-      freeSolo
-      options={options}
-      getOptionLabel={(option) => option.title || ""}
-      onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
-      onChange={(event, newValue) => {
-        if (newValue && newValue.title) {
-          onSearchSelect(newValue.title);
-        }
-      }}
-      loading={loading}
-      ListboxProps={{
-        style: {
-          // Each option is approx 56px tall; if fewer than 5 options, set height accordingly.
-          maxHeight: `${Math.min(options.length, 5) * 56}px`,
-          overflow: "hidden",
-          backgroundColor: "#fafafa",
-          borderRadius: "4px",
-          boxShadow: "0px 4px 8px rgba(0,0,0,0.2)",
-        },
-      }}
-      renderOption={(props, option) => (
-        <Box
-          component="li"
-          {...props}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            py: 1,
-            px: 2,
-            backgroundColor: "#f5f5f5",
-            borderBottom: "1px solid #e0e0e0",
-            "&:last-child": { borderBottom: "none" },
-            "&:hover": { backgroundColor: "#fff" },
-          }}
-        >
-          <img
-            src={`https://image.tmdb.org/t/p/w92${option.poster_path}`}
-            alt={option.title}
-            style={{
-              width: 50,
-              height: "auto",
-              borderRadius: 4,
-              flexShrink: 0,
-            }}
-          />
-          <Box>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontWeight: "bold", color: "#333" }}
-            >
-              {option.title}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {option.release_date}
-            </Typography>
-          </Box>
-        </Box>
-      )}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          placeholder="Search Movies..."
-          variant="outlined"
-          size="small"
-          sx={{
-            backgroundColor: "#fff",
-            width: "250px",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "4px",
-            },
-          }}
-          InputProps={{
-            ...params.InputProps,
-            sx: {
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "4px",
-              },
-            },
-            endAdornment: (
-              <>
-                {loading ? (
-                  <CircularProgress color="inherit" size={20} />
-                ) : null}
-                {params.InputProps.endAdornment}
-              </>
-            ),
-          }}
-        />
-      )}
-      sx={{ width: "250px" }}
-    />
-  );
-};
+import PersonIcon from "@mui/icons-material/Person";
 
-const Header = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const toggleDrawer = () => setMobileOpen(!mobileOpen);
+import AddIcon from "@mui/icons-material/Add";
+
+import NotificationsIcon from "@mui/icons-material/Notifications";
+
+import FilterListIcon from "@mui/icons-material/FilterList";
+
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+
+import { Link, useLocation, useHistory } from "react-router-dom";
+
+import { useUser, UserButton } from "@clerk/clerk-react";
+
+// User Feature Imports
+
+import AdvancedSearch from "./AdvancedSearch";
+
+import { ColorModeContext } from "../../theme/ThemeProvider";
+
+// --- Teammate's Styled Components ---
+
+const SidebarButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== "isActive",
+})(({ theme, isActive }) => ({
+  justifyContent: "flex-start",
+
+  padding: "8px 12px",
+
+  width: "100%",
+
+  textTransform: "none",
+
+  color: isActive ? theme.palette.common.black : theme.palette.common.white,
+
+  backgroundColor: isActive ? theme.palette.common.white : "transparent",
+
+  "&:hover": {
+    backgroundColor: isActive
+      ? theme.palette.common.white
+      : theme.palette.action.hover,
+  },
+
+  "& .MuiButton-startIcon": {
+    color: isActive ? theme.palette.common.black : theme.palette.common.white,
+  },
+}));
+
+const Header = ({ children }) => {
+  const location = useLocation();
+
   const history = useHistory();
 
-  const navLinks = [
-    { title: "Home", path: "/" },
-    { title: "API", path: "/api" },
-  ];
+  const { isSignedIn, user, isLoaded } = useUser();
 
-  const handleSearchSelect = (query) => {
-    if (query.trim()) {
-      history.push(`/search?query=${encodeURIComponent(query)}`);
-    }
+  const theme = useTheme();
+
+  const colorMode = useContext(ColorModeContext);
+
+  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+
+  const handleAdvancedSearchToggle = () => {
+    setAdvancedSearchOpen(!advancedSearchOpen);
   };
 
+  const displayName =
+    isLoaded && isSignedIn
+      ? user?.firstName || user?.primaryEmailAddress?.emailAddress || "User"
+      : "Guest";
+
+  const navItems = [
+    { path: "/", label: "Home", icon: <HomeIcon /> },
+
+    { path: "/history", label: "History", icon: <HistoryIcon /> },
+
+    ...(isSignedIn
+      ? [{ path: "/profile", label: "Profile", icon: <PersonIcon /> }]
+      : []),
+
+    {
+      path: "/notifications",
+
+      label: "Notifications",
+
+      icon: <NotificationsIcon />,
+    },
+  ];
+
   return (
-    <AppBar position="static" sx={{ background: "#000" }}>
-      <Toolbar sx={{ justifyContent: "space-between", py: 1.5 }}>
-        {/* Left: Logo and Navigation Links */}
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <img src="./images/logo.png" alt="Logo" width={120} />
-          <Box sx={{ display: { xs: "none", md: "flex" }, ml: 3 }}>
-            {navLinks.map((item) => (
-              <Button
-                key={item.title}
-                component={Link}
-                to={item.path}
-                sx={{
-                  textTransform: "uppercase",
-                  fontWeight: "bold",
-                  letterSpacing: "1px",
-                  fontSize: "1rem",
-                  background: "linear-gradient(45deg, #ff416c, #ff4b2b)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  position: "relative",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: "translateY(-3px)",
-                    "&:after": {
-                      content: '""',
-                      position: "absolute",
-                      left: 0,
-                      bottom: -4,
-                      width: "100%",
-                      height: "2px",
-                      background: "linear-gradient(45deg, #ff416c, #ff4b2b)",
-                    },
-                  },
-                }}
+    <>
+      <Box sx={{ display: "flex", height: "100vh" }}>
+        {/* Sidebar */}
+
+        <Box
+          sx={{
+            width: "256px",
+
+            bgcolor: "#000000",
+
+            display: "flex",
+
+            flexDirection: "column",
+
+            height: "100%",
+
+            borderRight: `1px solid ${theme.palette.divider}`,
+
+            flexShrink: 0,
+          }}
+        >
+          {/* Sidebar Top Section */}
+
+          <Box sx={{ p: 2 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: "bold",
+
+                color: "#f44336",
+
+                mb: 3,
+
+                textAlign: "center",
+              }}
+            >
+              <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+                Watchlists
+              </Link>
+            </Typography>
+
+            {/* Navigation Buttons */}
+
+            <Box sx={{ mb: 3 }}>
+              {navItems.map((item) => (
+                <SidebarButton
+                  key={item.path}
+                  component={Link}
+                  to={item.path}
+                  startIcon={item.icon}
+                  isActive={location.pathname === item.path}
+                >
+                  {item.label}
+                </SidebarButton>
+              ))}
+            </Box>
+
+            {/* Advanced Search Trigger */}
+
+            <Tooltip title="Advanced Search">
+              <SidebarButton
+                onClick={handleAdvancedSearchToggle}
+                startIcon={<FilterListIcon />}
               >
-                {item.title}
-              </Button>
-            ))}
+                Advanced Search
+              </SidebarButton>
+            </Tooltip>
+
+            {/* Theme Toggle */}
+
+            <Tooltip
+              title={theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"}
+            >
+              <SidebarButton
+                onClick={colorMode.toggleColorMode}
+                startIcon={
+                  theme.palette.mode === "dark" ? (
+                    <Brightness7Icon />
+                  ) : (
+                    <Brightness4Icon />
+                  )
+                }
+              >
+                {theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"}
+              </SidebarButton>
+            </Tooltip>
+
+            {/* Create Watchlist Button */}
+
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              fullWidth
+              sx={{
+                bgcolor: "#f44336",
+
+                "&:hover": { bgcolor: "#d32f2f" },
+
+                mt: 3,
+
+                textTransform: "none",
+              }}
+            >
+              Create watchlist
+            </Button>
+          </Box>
+
+          {/* Sidebar Bottom Section (User Info/Auth) */}
+
+          <Box sx={{ mt: "auto", p: 2, borderTop: "1px solid #333333" }}>
+            {!isLoaded ? (
+              // Now CircularProgress can be used
+
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress size={24} sx={{ color: "white" }} />
+              </Box>
+            ) : isSignedIn ? (
+              <Box
+                sx={{ display: "flex", alignItems: "center", width: "100%" }}
+              >
+                <UserButton
+                  afterSignOutUrl="/"
+                  appearance={
+                    {
+                      /* Clerk appearance */
+                    }
+                  }
+                />
+
+                <Typography
+                  sx={{
+                    ml: 1.5,
+
+                    color: "white",
+
+                    flex: 1,
+
+                    overflow: "hidden",
+
+                    textOverflow: "ellipsis",
+
+                    whiteSpace: "nowrap",
+                  }}
+                  title={displayName}
+                >
+                  {displayName}
+                </Typography>
+              </Box>
+            ) : (
+              <SidebarButton
+                component={Link}
+                to="/auth"
+                startIcon={<PersonIcon />}
+              >
+                Sign In / Sign Up
+              </SidebarButton>
+            )}
           </Box>
         </Box>
 
-        {/* Right: Search Autocomplete, Icons, and Authentication */}
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          {/* Autocomplete Search Bar for sm and up */}
-          <Box sx={{ mr: 2, display: { xs: "none", sm: "block" } }}>
-            <SearchAutocomplete onSearchSelect={handleSearchSelect} />
-          </Box>
-          {/* Mobile: Show a search icon if full search bar is hidden */}
-          <IconButton
-            color="inherit"
-            sx={{
-              display: { xs: "block", sm: "none" },
-              transition: "all 0.3s ease",
-              "&:hover": { transform: "scale(1.1)", color: "#ff4b2b" },
-            }}
-            onClick={() => {
-              const query = prompt("Search Movies:");
-              if (query && query.trim()) {
-                handleSearchSelect(query);
-              }
-            }}
-          >
-            <Search />
-          </IconButton>
-          <IconButton
-            color="inherit"
-            sx={{
-              transition: "all 0.3s ease",
-              "&:hover": { transform: "scale(1.1)", color: "#ff4b2b" },
-            }}
-          >
-            <Notifications />
-          </IconButton>
-          <SignedOut>
-            <Button
-              component={Link}
-              to="/auth"
-              variant="contained"
-              sx={{
-                bgcolor: "#e50813",
-                ml: 2,
-                textTransform: "uppercase",
-                fontWeight: "bold",
-                letterSpacing: "1px",
-                transition: "all 0.3s ease",
-                "&:hover": { transform: "scale(1.05)" },
-              }}
-            >
-              Sign In
-            </Button>
-          </SignedOut>
-          <SignedIn>
-            <Button
-              component={Link}
-              to="/profile"
-              sx={{
-                textTransform: "uppercase",
-                fontWeight: "bold",
-                letterSpacing: "1px",
-                fontSize: "1rem",
-                background: "linear-gradient(45deg, #ff416c, #ff4b2b)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                position: "relative",
-                transition: "all 0.3s ease",
-                mr: 2,
-                "&:hover": {
-                  transform: "translateY(-3px)",
-                  "&:after": {
-                    content: '""',
-                    position: "absolute",
-                    left: 0,
-                    bottom: -4,
-                    width: "100%",
-                    height: "2px",
-                    background: "linear-gradient(45deg, #ff416c, #ff4b2b)",
-                  },
-                },
-              }}
-            >
-              Profile
-            </Button>
-            <UserButton />
-          </SignedIn>
-          <IconButton
-            color="inherit"
-            edge="end"
-            sx={{
-              display: { md: "none" },
-              transition: "all 0.3s ease",
-              "&:hover": { transform: "scale(1.1)", color: "#ff4b2b" },
-            }}
-            onClick={toggleDrawer}
-          >
-            <MenuIcon />
-          </IconButton>
+        {/* Content Area */}
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+
+            overflowY: "auto",
+
+            bgcolor: "background.default",
+
+            p: 3,
+
+            height: "100vh",
+
+            pb: "80px", // Padding for fixed footer
+          }}
+        >
+          {children}
         </Box>
-      </Toolbar>
-      <Drawer anchor="left" open={mobileOpen} onClose={toggleDrawer}>
-        <List sx={{ width: 200 }}>
-          {navLinks.map((item) => (
-            <ListItem
-              button
-              key={item.title}
-              component={Link}
-              to={item.path}
-              onClick={toggleDrawer}
-              sx={{
-                textTransform: "uppercase",
-                fontWeight: "bold",
-                letterSpacing: "1px",
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  transform: "translateY(-3px)",
-                  "& .MuiListItemText-primary": { color: "#ff4b2b" },
-                },
-              }}
-            >
-              <ListItemText primary={item.title} />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-    </AppBar>
+      </Box>
+
+      {/* Advanced Search Dialog */}
+
+      <AdvancedSearch
+        open={advancedSearchOpen}
+        onClose={() => setAdvancedSearchOpen(false)}
+      />
+    </>
   );
 };
 

@@ -1,3 +1,5 @@
+// components/upcoming/Ucard.jsx
+
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -21,7 +23,12 @@ const Ucard = ({ item: { id, cover, name, time } }) => {
         width: 280, // Ensure consistent width
       }}
     >
-      <CardMedia component="img" height="250" image={cover} alt={name} />
+      <Link
+        to={`/movie/${id}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CardMedia component="img" height="250" image={cover} alt={name} />
+      </Link>
       <CardContent>
         <Typography variant="h6" fontWeight="bold">
           {name}
@@ -31,7 +38,7 @@ const Ucard = ({ item: { id, cover, name, time } }) => {
         </Typography>
         <Button
           component={Link}
-          to={`/singlepage/${id}`}
+          to={`/movie/${id}`}
           variant="contained"
           color="error"
           startIcon={<PlayArrowIcon />}

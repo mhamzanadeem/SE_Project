@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { trending } from "../../dummyData";
+// components/trending/Trending.jsx
+
+import React from "react";
 import TrendingCard from "./TrendingCard";
 import {
   Container,
@@ -8,12 +9,20 @@ import {
   Box,
   useMediaQuery,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
 
-const Trending = () => {
-  const [items] = useState(trending);
+const Trending = ({ items = [] }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  if (!items || items.length === 0) {
+    return (
+      <Container sx={{ py: 5, textAlign: "center" }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
 
   return (
     <Container sx={{ py: 5 }}>
@@ -42,7 +51,7 @@ const Trending = () => {
             lg={3}
             key={item.id || index}
             sx={{
-              // On small screens, center each Grid item’s content
+              // On small screens, center each Grid item's content
               ...(isSmallScreen && {
                 display: "flex",
                 justifyContent: "center",

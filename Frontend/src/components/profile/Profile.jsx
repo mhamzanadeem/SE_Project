@@ -1,3 +1,5 @@
+// components/profile/Profilel.jsx
+
 import { useUser, RedirectToSignIn } from "@clerk/clerk-react";
 import { Typography, Box, CircularProgress, Button } from "@mui/material";
 import { useHistory } from "react-router-dom"; // Changed from useNavigate to useHistory

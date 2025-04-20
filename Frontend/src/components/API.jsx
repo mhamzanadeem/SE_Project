@@ -66,6 +66,7 @@
 //     console.error('Error fetching data:', error);
 //   });
 
+// component/API.jsx
 import React, { useState, useEffect } from "react";
 import {
   Grid,
